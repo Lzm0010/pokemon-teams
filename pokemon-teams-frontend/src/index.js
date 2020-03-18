@@ -61,18 +61,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const renderPokemon = (ul, pokemon) => {
-        const li = document.createElement('li');
-        const btn = document.createElement('button');
-        btn.setAttribute('class', 'release');
-        btn.setAttribute('data-pokemon-id', pokemon.id);
-        btn.innerText = "Release";
-        li.innerHTML = `${pokemon.nickname} (${pokemon.species}) `
-        li.appendChild(btn);
-        ul.appendChild(li);
-
-        btn.onclick = () => {
-            console.log(pokemon.id)
-            removePokemon(pokemon.id);
+        if (pokemon.nickname !== undefined) {
+            const li = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.setAttribute('class', 'release');
+            btn.setAttribute('data-pokemon-id', pokemon.id);
+            btn.innerText = "Release";
+            li.innerHTML = `${pokemon.nickname} (${pokemon.species}) `
+            li.appendChild(btn);
+            ul.appendChild(li);
+        
+            btn.onclick = () => {
+                console.log(pokemon.id)
+                removePokemon(pokemon.id);
+            }
         }
     };
 
