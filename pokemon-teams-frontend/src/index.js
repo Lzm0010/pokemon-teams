@@ -13,13 +13,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Content-Type": 'application/json',
                 "Accept": 'application/json'
             },
-            body: {
-                "trainer_id": `${trainerId}`
-            }
+            body: JSON.stringify({"trainer_id": trainerId})
         };
         fetch(POKEMONS_URL, configObj)
             .then(res => res.json())
-            .then(json => console.log(json))
+            .then(json => {
+                const ul = document.querySelector(`button[data-trainer-id='${trainerId}']`).parentElement.lastChild;
+                renderPokemon(ul, json);
+            })
             .catch(err => console.log(err));
     };
 
@@ -36,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch(err => console.log(err));
     };
 
-
     const renderTrainer = (trainer) => {
         const div = document.createElement('div');
         div.setAttribute("class", "card");
@@ -48,19 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         addbtn.innerText = "Add Pokemon";
         const ul = document.createElement('ul');
         trainer.pokemons.forEach(pokemon => {
-            const li = document.createElement('li');
-            const btn = document.createElement('button');
-            btn.setAttribute('class', 'release');
-            btn.setAttribute('data-pokemon-id', pokemon.id);
-            btn.innerText = "Release";
-            li.innerHTML = `${pokemon.nickname} (${pokemon.species}) `
-            li.appendChild(btn);
-            ul.appendChild(li);
-
-            btn.onclick = () => {
-                console.log(pokemon.id)
-                removePokemon(pokemon.id);
-            }
+            renderPokemon(ul, pokemon);
         });
         main.appendChild(div);
         div.appendChild(p);
@@ -71,6 +59,22 @@ document.addEventListener("DOMContentLoaded", () => {
             addPokemon(trainer.id)
         }
     }
+
+    const renderPokemon = (ul, pokemon) => {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.setAttribute('class', 'release');
+        btn.setAttribute('data-pokemon-id', pokemon.id);
+        btn.innerText = "Release";
+        li.innerHTML = `${pokemon.nickname} (${pokemon.species}) `
+        li.appendChild(btn);
+        ul.appendChild(li);
+
+        btn.onclick = () => {
+            console.log(pokemon.id)
+            removePokemon(pokemon.id);
+        }
+    };
 
     const getTrainers = () => {
         fetch(TRAINERS_URL)
